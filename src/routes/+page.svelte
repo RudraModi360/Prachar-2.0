@@ -17,7 +17,17 @@
     const db_ = getFirestore();
     // console.log(app,db);
     let uploading = false;
-    let file
+    let file;
+    let comment;
+    let latitude;
+    let longitude;
+    let date=window.Date();
+    let location =window.navigator.geolocation.getCurrentPosition((position)=>{
+        let lat=position.coords.latitude;
+        let lon=position.coords.longitude;
+        latitude=lat;
+        longitude=lon;
+    });
 
     // add data
 
@@ -42,12 +52,13 @@
     // getdetail();
 
     function inputChangeHandler(e) {
-        file = e.target.files[0]
+        file = e.target.files[0];
+        console.log(file);
     }
 
     async function upload() {
         uploading = true;
-        const docRef = doc(collection(db, "images"))
+        const docRef = doc(collection(db, "images"));
         // previewURL = URL.createObjectURL(file);
         const storageRef = ref(storage, `/${docRef.id}.png`);
         const result = await uploadBytes(storageRef, file);
@@ -55,11 +66,12 @@
 
         await setDoc(docRef, {
             photoURL,
-            Comment,
-            Date,
-            Geolocation
-        })
-        
+            comment,
+            date,
+            latitude,
+            longitude
+        });
+
         uploading = false;
     }
 </script>
@@ -82,6 +94,7 @@
             <p>Uploading...</p>
             <progress class="progress progress-info w-56 mt-6" />
         {/if}
+        <!-- <input bind:value={comment} /> -->
     </div>
 </form>
 
