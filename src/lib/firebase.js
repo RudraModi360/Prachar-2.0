@@ -4,7 +4,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { writable, readable, derived } from "svelte/store";
 
-const firebaseConfig = {
+export const firebaseConfig = {
     apiKey: "AIzaSyC9FynmjAgnlSOoT2VqYenE49kXEkXTUms",
     authDomain: "rodic-infra.firebaseapp.com",
     projectId: "rodic-infra",

@@ -23,7 +23,7 @@
 
     // // Add a new document with a generated id.
     //     const docRef = addDoc(collection(db_, "todos"), {
-    //      task: "toDance",
+    //      task: "toCode",
     //      isTrue: "false"
     // });
 
@@ -68,13 +68,6 @@
 
 <form class="max-w-screen-md w-full">
     <div class="form-control w-full max-w-xs my-10 mx-auto text-center">
-        <!-- <img
-          src={previewURL ?? $userData?.photoURL ?? "/user.png"}
-          alt="photoURL"
-          width="256"
-          height="256"
-          class="mx-auto"
-        /> -->
         <label for="photoURL" class="label">
             <span class="label-text">Pick a file</span>
         </label>
