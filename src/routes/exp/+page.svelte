@@ -3,6 +3,7 @@
 	import { browser } from '$app/environment';
 	import Chilltime from '$lib/back.gif';
 	import Ideal from '$lib/ideal.gif';
+	import { error, redirect } from '@sveltejs/kit';
 
 	let mapElement;
 	let map;
@@ -48,8 +49,13 @@
 						'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 				})
 				.addTo(map);
-			let m1 = leaflet.marker([0, 0], { icon: myIcon2 }).addTo(map);
-
+			let m1 = leaflet
+				.marker([0, 0], { icon: myIcon2 })
+				.on('click', function (e) {
+					window.location = '/details';
+				})
+				.addTo(map);
+			// m1.on('click', alert('active'));
 			map.on('click', (e) => {
 				let markerbyclick = new leaflet.marker([e.latlng.lat, e.latlng.lng], {
 					icon: myIcon
@@ -58,13 +64,22 @@
 				long = e.latlng.lng;
 			});
 
+			let circle = leaflet
+				.circle([51.508, -0.11], {
+					color: 'red',
+					fillColor: '#f03',
+					fillOpacity: 0.5,
+					radius: 500
+				})
+				.addTo(map);
+			circle.bindPopup(console.log('active'));
 			leaflet
 				.marker([51.5, -0.09], { icon: myIcon })
 				.addTo(map)
 				.bindPopup('A pretty CSS3 popup.<br> Easily customizable.');
 			// .openPopup();
 			if (doupdate) {
-				setInterval(update, 1000);
+				setTimeout(update, 1000);
 			}
 		}
 	});
@@ -85,6 +100,7 @@
 		doupdate = true;
 	}}>Upload</button
 >
+{lat}
 <main>
 	<div bind:this={mapElement} />
 </main>
