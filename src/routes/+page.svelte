@@ -10,6 +10,9 @@
         doc,
         getDoc,
         setDoc,
+        query,
+        where,
+        getDocs,
     } from "firebase/firestore";
     import { firebaseConfig } from "$lib/firebase";
     import { storage, db } from "$lib/firebase";
@@ -19,15 +22,8 @@
     let uploading = false;
     let file;
     let comment;
-    let latitude;
-    let longitude;
-    let date=window.Date();
-    let location =window.navigator.geolocation.getCurrentPosition((position)=>{
-        let lat=position.coords.latitude;
-        let lon=position.coords.longitude;
-        latitude=lat;
-        longitude=lon;
-    });
+    let lat;
+    let lng;
 
     // add data
 
@@ -53,7 +49,6 @@
 
     function inputChangeHandler(e) {
         file = e.target.files[0];
-        console.log(file);
     }
 
     async function upload() {
@@ -67,12 +62,28 @@
         await setDoc(docRef, {
             photoURL,
             comment,
-            date,
-            latitude,
-            longitude
+            lat,
+            lng,
         });
 
         uploading = false;
+    }
+
+    // async function hello() {
+    //     const q = query(collection(db, "images"), where("photo_url", "==", true));
+    //     const querySnapshot = await getDocs(q);
+    //     querySnapshot.forEach((doc) => {
+    //         // doc.data() is never undefined for query doc snapshots
+    //         console.log(doc.id, " => ", doc.data());
+    //     });
+    // }
+
+    async function hello() {
+        const collectionRef = collection(db, "images");
+        const querySnapshot = await getDocs(collectionRef);
+        querySnapshot.forEach((doc) => {
+            console.log(doc.id, " => ", doc.data());
+        });
     }
 </script>
 
@@ -94,8 +105,18 @@
             <p>Uploading...</p>
             <progress class="progress progress-info w-56 mt-6" />
         {/if}
-        <!-- <input bind:value={comment} /> -->
+        <input bind:value={comment} />
     </div>
 </form>
 
+<button
+    on:click={() => {
+        window.navigator.geolocation.getCurrentPosition((position) => {
+            lat = position.coords.latitude;
+            lng = position.coords.longitude;
+        }, console.log);
+    }}>Location</button
+>
+{lat}
+<button on:click={hello}>retrieve</button>
 <button on:click={upload} class="btn btn-primary"> Finish </button>
