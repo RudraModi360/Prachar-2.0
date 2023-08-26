@@ -2,6 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
 	import Chilltime from '$lib/back.gif';
+	import Ideal from '$lib/ideal.gif';
 
 	let mapElement;
 	let map;
@@ -14,7 +15,7 @@
 			const leaflet = await import('leaflet');
 
 			function update() {
-				if ('geolocation' in navigator && doupdate) {
+				if ('geolocation' in navigator) {
 					window.navigator.geolocation.getCurrentPosition((position) => {
 						lat = position.coords.latitude;
 						long = position.coords.longitude;
@@ -35,6 +36,11 @@
 				iconSize: [100, 100],
 				iconAnchor: [22, 94]
 			});
+			let myIcon2 = leaflet.icon({
+				iconUrl: Ideal,
+				iconSize: [100, 100],
+				iconAnchor: [22, 94]
+			});
 
 			leaflet
 				.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -42,7 +48,7 @@
 						'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 				})
 				.addTo(map);
-			let m1 = leaflet.marker([0, 0]).addTo(map);
+			let m1 = leaflet.marker([0, 0], { icon: myIcon2 }).addTo(map);
 
 			map.on('click', (e) => {
 				let markerbyclick = new leaflet.marker([e.latlng.lat, e.latlng.lng], {
@@ -57,8 +63,9 @@
 				.addTo(map)
 				.bindPopup('A pretty CSS3 popup.<br> Easily customizable.');
 			// .openPopup();
-
-			setInterval(update, 1000);
+			if (doupdate) {
+				setInterval(update, 1000);
+			}
 		}
 	});
 
