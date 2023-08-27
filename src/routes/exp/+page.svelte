@@ -4,12 +4,14 @@
 	import Chilltime from '$lib/back.gif';
 	import Ideal from '$lib/ideal.gif';
 	import { error, redirect } from '@sveltejs/kit';
+	import locate from '$lib/locate-icon.svg';
 
 	let mapElement;
 	let map;
 	let lat;
 	let long;
 	let doupdate = true;
+	let moveftime = true;
 
 	onMount(async () => {
 		if (browser) {
@@ -22,12 +24,16 @@
 						long = position.coords.longitude;
 						// console.log([lat, long]);
 						m1.setLatLng([lat, long]);
-						map.setView([lat, long], 8);
+						if (moveftime) {
+							map.setView([lat, long], 8);
+							moveftime = false;
+						}
 						doupdate = false;
 					});
 				} else {
 					console.log('location not found');
 				}
+				return doupdate;
 			}
 
 			map = leaflet.map(mapElement).setView([0, 0], 4);
@@ -52,7 +58,7 @@
 			let m1 = leaflet
 				.marker([0, 0], { icon: myIcon2 })
 				.on('click', function (e) {
-					window.location = '/details';
+					window.location = '/exp/123';
 				})
 				.addTo(map);
 			// m1.on('click', alert('active'));
@@ -79,7 +85,7 @@
 				.bindPopup('A pretty CSS3 popup.<br> Easily customizable.');
 			// .openPopup();
 			if (doupdate) {
-				setTimeout(update, 1000);
+				setInterval(update, 1000);
 			}
 		}
 	});
@@ -94,20 +100,58 @@
 	// $: console.log(latlng_user);
 </script>
 
-<button
+<!-- <button
 	on:click={() => {
 		window.navigator.geolocation.getCurrentPosition(console.log, console.log);
 		doupdate = true;
 	}}>Upload</button
 >
-{lat}
+{lat} -->
+
 <main>
 	<div bind:this={mapElement} />
 </main>
+<button
+	on:click={() => {
+		window.location = `/exp/${lat}`;
+	}}
+	class="addplace"
+>
+	Add Place</button
+>
+<button
+	on:click={() => {
+		doupdate = true;
+		moveftime = true;
+	}}
+	class="locate"
+>
+	<img src={locate} alt="locate" /></button
+>
 
 <style>
 	@import 'leaflet/dist/leaflet.css';
 	main div {
-		height: 600px;
+		height: 90vh;
+		bottom: 10vh;
+		/* z-index: -1; */
+	}
+	.locate {
+		margin-left: 3vw;
+		margin-bottom: 0vh;
+		float: left;
+		position: fixed;
+		bottom: 3vh;
+		/* z-index: 5; */
+		background-color: white;
+	}
+	img {
+		height: 50px;
+	}
+	.addplace {
+		width: 70vw;
+		bottom: 9vh;
+		font-size: 6vh;
+		position: relative;
 	}
 </style>

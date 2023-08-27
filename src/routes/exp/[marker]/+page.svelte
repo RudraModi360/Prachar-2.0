@@ -4,6 +4,4 @@
 	export let data: PageData;
 </script>
 
-{#each data.locations as loc}
-	{loc.country}
-{/each}
+<h1>{data.loc}</h1>

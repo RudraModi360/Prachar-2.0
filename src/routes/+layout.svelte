@@ -4,4 +4,3 @@
 </script>
 
 <slot />
-<button>Upload</button>
